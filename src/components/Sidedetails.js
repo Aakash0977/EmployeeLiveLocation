@@ -4,6 +4,7 @@ import { calculateTimeDifference } from '../utils/commonUtils';
 
 const Sidedetails = ({ users, userId }) => {
   const orgUsersResponse = users;
+  
   return (
     <div>
       <div className="accordion" id="accordionExample">

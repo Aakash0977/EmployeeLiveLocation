@@ -32,14 +32,6 @@ $backgroundImg: '/img/login.png';
   min-height: 100vh;
 }
 
-// .avatarOnline {
-//   border: 2px solid $onColor; 
-// }
-
-// .avatarOnline {
-//   border: 2px solid $offColor; 
-// }
-
 .card {
   position: relative;
 }
@@ -87,10 +79,4 @@ $backgroundImg: '/img/login.png';
   font-weight: bold;
 }
 
-.overlay-container {
-  position: absolute;
-  top: 10px; /* Adjust as needed */
-  left: 10px; /* Adjust as needed */
-  z-index: 1000; /* Ensure it's above the map */
-}
 
