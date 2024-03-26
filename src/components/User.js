@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import NavbarUser from './NavbarUser';
-import { MapContainer, TileLayer, Marker, Popup, CircleMarker } from 'react-leaflet';
-import L from 'leaflet';
+import { MapContainer, TileLayer, Popup, CircleMarker } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { useParams } from 'react-router-dom';
 
@@ -12,7 +11,6 @@ import { FullscreenControl } from 'react-leaflet-fullscreen';
 import { BASE_URL } from '../utils/constants';
 
 const User = (props) => {
-  const [selectedUser, setSelectedUser] = useState(null);
   const [users, setUsers] = useState([]);
   const userId = useParams();
 
@@ -50,7 +48,8 @@ const User = (props) => {
     return () => {
       clearInterval(intervalId);
     };
-  }, []); // Empty dependency array, so it only runs once
+  }); // Empty dependency array, so it only runs once
+  
   return (
     <div className="App">
       <NavbarUser users={users} userId={userId.user} />
@@ -66,17 +65,7 @@ const User = (props) => {
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           />
           {users.map((user) => (
-            // <Marker
-            //   key={userId.user}
-            //   position={[user.lat, user.lng]}
-            //   icon={L.icon({ iconUrl: user.icon, iconSize: [32, 32] })}
-            // >
-            //   <Popup>
-            //     User_id: {userId.user} <br />
-            //     {new Date(user.trackedAt).toLocaleString()}
-            //   </Popup>
-            // </Marker>
-            <CircleMarker center={[user.lat, user.lng]} radius={5} color="red" fillOpacity={0.5}>
+                <CircleMarker center={[user.lat, user.lng]} radius={5} color="red" fillOpacity={0.5}>
               <Popup>
                 {new Date(user.trackedAt).toLocaleString()}
               </Popup>

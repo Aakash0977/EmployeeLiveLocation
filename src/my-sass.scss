@@ -87,4 +87,10 @@ $backgroundImg: '/img/login.png';
   font-weight: bold;
 }
 
+.overlay-container {
+  position: absolute;
+  top: 10px; /* Adjust as needed */
+  left: 10px; /* Adjust as needed */
+  z-index: 1000; /* Ensure it's above the map */
+}
 

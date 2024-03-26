@@ -85,7 +85,7 @@ export const Navbar = ({ users, userId }) => {
                 </ul>
               </li>
             </ul>
-            <Timepicker />
+            {/* <Timepicker /> */}
             <form className="d-flex p-1" role="search" onSubmit={handleSearch}>
             {!userId && ( <input
                 className="form-control me-2"
