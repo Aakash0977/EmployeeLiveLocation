@@ -33,6 +33,7 @@ const User = (props) => {
         });
 
         const json = await response.json();
+        console.log(json)
 
         const updatedUserData = json.map((item) => ({
           keyId: item._id,

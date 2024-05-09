@@ -1,19 +1,20 @@
 import React from 'react';
-import { calculateTimeDifference } from '../utils/commonUtils';
+import { calculateTimeDifference,calculateTimeDifferenceInMinutes } from '../utils/commonUtils';
 import profilePic from '../img/profile.jpeg'
 
 const UserCard = ({ user }) => {
-    const lastOnline = (calculateTimeDifference(user.time));
-    const status = lastOnline === "Just Now" ? 'Online' : 'Offline';
+    const lastOnlineTime = (calculateTimeDifference(user.time));
+    const lastOnline = (calculateTimeDifferenceInMinutes(user.time));
+    const status = lastOnline <= 10 ? 'Online' : 'Offline';
     return (
         <div className='card'  style={{ width: '18rem' }}>
             <div className="card-body">
                 <div className="user-info">
                     <div className="user-details">
                         <h5 className="card-title">{user.name}</h5>
-                        <h8 className="card-subtitle mb-2 text-body-secondary">
-                            <span>{lastOnline === "Just Now" ? 'online' : `${lastOnline}`}</span>
-                        </h8>
+                        <h6 className="card-subtitle mb-2 text-body-secondary">
+                            <span>{lastOnline === "Just Now" ? 'online' : `${lastOnlineTime}`}</span>
+                        </h6>
                         <p className="card-text"><b>Location:</b> {user.lat}, {user.lng}</p>
                         <p><b>Vendor Name:</b> {user.vendorName}</p>
                         <a href={`/${user.id}`} style={{ textDecoration: 'none' }} className="card-link">Show History</a>

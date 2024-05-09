@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-import { FullscreenControl } from 'react-leaflet-fullscreen'; // Import FullscreenControl
+// import { FullscreenControl } from 'react-leaflet-fullscreen'; // Import FullscreenControl
 import L from 'leaflet';
 import UserCard from './UserCard';
 
@@ -16,7 +16,6 @@ const MapComponent = ({ users, receivedData, isFullScreen = false }) => {
   }, [receivedData]);
 
   useEffect(() => {
-    console.log(newCenter.latitude); // Log newCenter.latitude whenever it changes
   }, [newCenter.latitude]);
 
   const customIcon = (name, icon) =>
@@ -28,7 +27,7 @@ const MapComponent = ({ users, receivedData, isFullScreen = false }) => {
 
   return (
     <div className="map-container">
-      <MapContainer center={[newCenter.latitude, newCenter.longitude]} zoom={10} style={{ height: isFullScreen ? '98vh' : '85vh', width: '100%' }} key={`${newCenter.latitude}-${newCenter.longitude}`} >
+      <MapContainer center={[newCenter.latitude, newCenter.longitude]} zoom={15} style={{ height: isFullScreen ? '98vh' : '85vh', width: '100%' }} key={`${newCenter.latitude}-${newCenter.longitude}`} >
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -40,13 +39,13 @@ const MapComponent = ({ users, receivedData, isFullScreen = false }) => {
             </Popup>
           </Marker>
         ))}
-        <FullscreenControl
-          position="topright"
-          content='<b>FS</b>'
-          title="Fullscreen"
-          titleCancel="Exit Fullscreen"
-          forceSeparateButton="true"
-        />
+        {/* <FullscreenControl
+          // position="topright"
+          // content='<b>FS</b>'
+          // title="Fullscreen"
+          // titleCancel="Exit Fullscreen"
+          // forceSeparateButton="true"
+        /> */}
         {/* Add FullscreenControl */}
       </MapContainer>
     </div>
