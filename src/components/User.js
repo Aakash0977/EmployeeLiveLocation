@@ -33,7 +33,6 @@ const User = (props) => {
         });
 
         const json = await response.json();
-        console.log(json)
 
         const updatedUserData = json.map((item) => ({
           keyId: item._id,
@@ -67,7 +66,7 @@ const User = (props) => {
   return (
     <div className="App">
       <NavbarUser users={userData} userId={userId.user} />
-      <Namebar name={userId.name??''} />
+      <Namebar name={userId.name??''} userId={userId} />
       <div className="map-container">
         <MapContainer
           key={`${newCenter.latitude}-${newCenter.longitude}`}
