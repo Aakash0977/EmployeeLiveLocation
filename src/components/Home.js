@@ -9,6 +9,12 @@ import userIcon from '../img/live-person-location-off.png';
 import liveLocationIcon from '../img/live-person-location.png';
 import { calculateTimeDifferenceInMinutes } from '../utils/commonUtils';
 import { BASE_URL } from '../utils/constants';
+import edrIcon from '../img/tech-edr.png';
+import cdrIcon from '../img/tech-cdr.png';
+import mwdrIcon from '../img/tech-mwdr.png';
+import pokIcon from '../img/tech-pok.png';
+import fwdrIcon from '../img/tech-fwdr.png';
+import wdrIcon from '../img/tech-wdr.png';
 
 const Home = (props) => {
   const [users, setUsers] = useState([]);
@@ -26,6 +32,18 @@ const Home = (props) => {
     });
     return allEmployees;
   }
+
+  const vendorToIconMap = {
+    'POK': pokIcon,
+    'EDR': cdrIcon,
+    'WDR-Butwal': wdrIcon,
+    'CDR': edrIcon,
+    'FWDR': fwdrIcon,
+    'MWDR': mwdrIcon,
+    'Bagmati': edrIcon,
+    'Bagmati Central': edrIcon
+  }
+
 
   const fetchData = async () => {
     props.setProgress(10);
@@ -46,7 +64,8 @@ const Home = (props) => {
       lat: item.location.latitude,
       lng: item.location.longitude,
       time: item.location.tracked_at,
-      icon: calculateTimeDifferenceInMinutes(item.location.tracked_at) > 10 ? userIcon : liveLocationIcon,
+      // icon: calculateTimeDifferenceInMinutes(item.location.tracked_at) > 10 ? userIcon : liveLocationIcon,
+      icon: vendorToIconMap[item.vendor_name],
       vendorName: item.vendor_name
     }));
 
@@ -73,7 +92,7 @@ const Home = (props) => {
   const toggleFullScreen = () => {
     var elem = document.documentElement;
     if (!document.fullscreenElement && !document.mozFullScreenElement &&
-        !document.webkitFullscreenElement && !document.msFullscreenElement) {
+      !document.webkitFullscreenElement && !document.msFullscreenElement) {
       if (elem.requestFullscreen) {
         elem.requestFullscreen();
       } else if (elem.msRequestFullscreen) {
@@ -104,29 +123,32 @@ const Home = (props) => {
     setReceivedData(data);
   };
 
- 
+  const bodyStyle = {
+    overflow: 'hidden'
+  };
+
 
   return (
     <div className="App">
       {!isFullScreen && (
         <>
-          <Navbar users={users} />
-          <Namebar toggleFullScreen={toggleFullScreen}/>
+          <Navbar users={users} logData={logDataFromSidedetails} />
+          <Namebar toggleFullScreen={toggleFullScreen} />
           <div className="d-flex">
             <div className="col-4 col-lg-3 px-2">
-              <div className="d-flex flex-column bd-highlight mb-3">
+              <div className="d-flex flex-column bd-highlight mb-3" style={{ maxHeight: '85vh', overflowY: 'auto' }}>
                 <div className="p-2 bd-highlight border">
-                  <Sidedetails orgResponse={orgResponse}  users={users} logData={logDataFromSidedetails}/>
+                  <Sidedetails orgResponse={orgResponse} users={users} logData={logDataFromSidedetails} />
                 </div>
               </div>
             </div>
             <div className="col-8 col-lg-9">
-              <MapComponent users={users}  receivedData={receivedData}/>
+              <MapComponent users={users} receivedData={receivedData} />
             </div>
           </div>
         </>
       )}
-      {isFullScreen && <><Namebar toggleFullScreen={toggleFullScreen}  isFullScreen={true}/><MapComponent users={users} receivedData={receivedData}  isFullScreen={true}/></>} 
+      {isFullScreen && <><Namebar toggleFullScreen={toggleFullScreen} isFullScreen={true} /><MapComponent users={users} receivedData={receivedData} isFullScreen={true} /></>}
     </div>
   );
 };

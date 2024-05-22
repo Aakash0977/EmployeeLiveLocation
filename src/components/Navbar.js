@@ -4,9 +4,16 @@ import { useNavigate } from 'react-router-dom';
 // import Timepicker from './Timepicker';
 import logo from '../img/DishHome_Logo.svg.png';
 
-export const Navbar = ({ users, userId }) => {
+export const Navbar = ({ users, userId , logData}) => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
+
+  const [mapKey, setMapKey] = useState(0)
+
+  const handleSuccessfulSearch = (user) => {
+    setMapKey(pervValue => pervValue + 1)
+    logData({ latitude: user.lat, longitude: user.lng, mapKey: mapKey });
+  };
 
   const handleLogout = () => {
     sessionStorage.removeItem('accessToken');
@@ -15,22 +22,23 @@ export const Navbar = ({ users, userId }) => {
 
   const handleSearch = (e) => {
     e.preventDefault();
-  
-    // Check if the search query is a valid user ID
+
+    if (!searchQuery.trim()) {
+      alert('Please enter a username.');
+      return;
+    }
     const userToSearch = users.find((user) => user.id === searchQuery);
-  
+
     if (userToSearch) {
-      // If a user with the matching ID is found, navigate to their profile
       navigate(`/${userToSearch.id}`);
     } else {
-      // If the search query is not a valid user ID, check if it's a user name
       const userByName = users.find((user) => user.name === searchQuery);
-      
+
+      console.log(userByName)
       if (userByName) {
-        // If a user with the matching name is found, navigate to their profile
-        navigate(`/${userByName.id}`);
+        handleSuccessfulSearch(userByName)
+        // navigate(`/${userByName.id}`);
       } else {
-        // Handle the case when the user is not found
         alert('User not found.');
       }
     }
@@ -41,8 +49,8 @@ export const Navbar = ({ users, userId }) => {
       <nav className="navbar navbar-expand-lg p-1 navbar-light bg-light">
         <div className="container-fluid">
           <Link className="navbar-brand" to="/">
-             <img src={logo} alt="Logo" width="40" height="40" style={{ marginRight: '10px' }}  />
-             DH-RTLS
+            <img src={logo} alt="Logo" width="40" height="40" style={{ marginRight: '10px' }} />
+            DH-RTLS
           </Link>
           <button
             className="navbar-toggler"
@@ -73,15 +81,15 @@ export const Navbar = ({ users, userId }) => {
             </ul>
             {/* <Timepicker /> */}
             <form className="d-flex p-1" role="search" onSubmit={handleSearch}>
-            {!userId && ( <input
+              {!userId && (<input
                 className="form-control me-2"
                 type="search"
-                placeholder="Search by User ID"
+                placeholder="Search by Tech Username"
                 aria-label="Search"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />)}
-              {!userId &&(<button className="btn btn-outline-success" type="submit">
+              {!userId && (<button className="btn btn-outline-success" type="submit">
                 Search
               </button>)}
               <button className="btn btn-outline-success mx-2" onClick={handleLogout}>

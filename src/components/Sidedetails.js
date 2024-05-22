@@ -1,51 +1,65 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { calculateTimeDifference } from '../utils/commonUtils';
+import { useNavigate } from 'react-router-dom';
+import { Accordion, AccordionSummary, Typography, AccordionDetails } from '@mui/material';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import PreviewIcon from '@mui/icons-material/Preview';
+import ColoredBlock from './partials/ColoredBlock';
 
-const Sidedetails = ({ users, orgResponse }) => {
+import fwdrHalfIcon from '../img/tech-fwdr-half.png';
+import cdrHalfIcon from '../img/tech-cdr-half.png';
+import edrHalfIcon from '../img/tech-edr-half.png';
+import pokHalfIcon from '../img/tech-pok-half.png';
+import wdrHalfIcon from '../img/tech-wdr-half.png';
+import mwdrHalfIcon from '../img/tech-mwdr-half.png';
+
+const Sidedetails = ({ users, orgResponse, logData }) => {
   const orgUsersResponse = orgResponse;
+  const [mapKey, setMapKey] = useState(0)
+
+  const handleClick = (user) => {
+    setMapKey(pervValue => pervValue + 1)
+    logData({ latitude: user.location.latitude, longitude: user.location.longitude, mapKey: mapKey });
+  };
+
   return (
-    <div>
-      <div className="accordion" id="accordionExample">
-        {orgUsersResponse ? orgUsersResponse.map((vendor) => (
-          <div className="accordion-item" key={vendor.vendor_id}>
-            <h2 className="accordion-header" id={`heading-${vendor.vendor_id}`}>
-              <button
-                className="accordion-button"
-                type="button"
-                data-bs-toggle="collapse"
-                data-bs-target={`#collapse-${vendor.vendor_id}`}
-                aria-expanded="true"
-                aria-controls={`collapse-${vendor.vendor_id}`}
-              >
-                {vendor.vendor_name} ({vendor.employees.length})
-              </button>
-            </h2>
-            <div
-              id={`collapse-${vendor.vendor_id}`}
-              className="accordion-collapse collapse show"
-              aria-labelledby={`heading-${vendor.vendor_id}`}
-              data-bs-parent="#accordionExample"
+    <div style={{ marginTop: '20px', marginBottom: '20px', overflowY: 'auto', maxHeight: '100vh', scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitOverflowScrolling: 'none' }} >
+      {
+        orgUsersResponse ? orgUsersResponse.map((vendor, index) => (
+          <Accordion key={index}>
+            <AccordionSummary
+              expandIcon={<ArrowDropDownIcon />}
+              aria-controls='panel1-content'
+              id="panel1-header"
             >
-              <div className="accordion-body">
-                <ul className="list-group">
-                  {vendor.employees && vendor.employees.map((user) => (
-                    <li key={user.employeeId} className="list-group-item">
-                      <Link
-                        to="#"
-                        style={{ textDecoration: 'none' }}
-                        onClick={() => handleClick(user)}
-                      >
-                        {user.name}<br /> ({calculateTimeDifference(user.location.tracked_at)})
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <VendorIcon imageUrl={vendorToIconMap[vendor.vendor_name]} />
+                <div style={{ marginLeft: '10px' }}></div>
+                <Typography variant='subtitle2'> {vendor.vendor_name} ({vendor.employees.length})</Typography>
               </div>
-            </div>
-          </div>
-        )) : null}
-      </div>
+            </AccordionSummary>
+            <AccordionDetails>
+              <ul className="list-group">
+                {vendor.employees && vendor.employees.map((user) => (
+                  <li key={user.employeeId} className="list-group-item" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Link
+                      to="#"
+                      style={{ textDecoration: 'none' }}
+                      onClick={() => handleClick(user)}
+                    >
+                      <Typography variant='body2' style={{ fontWeight: 'bold', color: '#581845' }}>{user.name}</Typography> <Typography variant='body2'>({calculateTimeDifference(user.location.tracked_at)})</Typography>
+                    </Link>
+                    <a href={`/${user.employeeId}`} style={{ textDecoration: 'none' }} className="card-link" target='blank'>
+                      <span><PreviewIcon style={{ color: '#CC5500' }} /></span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </AccordionDetails>
+          </Accordion>
+        )) : null
+      }
     </div>
   );
 };
