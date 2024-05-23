@@ -1,10 +1,17 @@
-import React, { useEffect , useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './SCSS/NewHome.scss';
 import MapComponent from './Map';
-import { calculateTimeDifferenceInMinutes } from '../utils/commonUtils';
 import { BASE_URL } from '../utils/constants';
-import userIcon from '../img/live-person-location-off.png';
-import liveLocationIcon from '../img/live-person-location.png';
+import { Link } from 'react-router-dom';
+import logo from '../img/DishHome_Logo.svg.png';
+
+import edrIcon from '../img/tech-edr.png';
+import cdrIcon from '../img/tech-cdr.png';
+import mwdrIcon from '../img/tech-mwdr.png';
+import pokIcon from '../img/tech-pok.png';
+import fwdrIcon from '../img/tech-fwdr.png';
+import wdrIcon from '../img/tech-wdr.png';
+import Sidedetails from './Sidedetails';
 
 export const NewHome = (props) => {
   useEffect(() => {
@@ -18,18 +25,46 @@ export const NewHome = (props) => {
       document.getElementById('sidebarCollapse').removeEventListener('click', handleSidebarToggle);
     };
   }, []);
-  
+
   const [users, setUsers] = useState([]);
+  const [orgResponse, setOrgResponse] = useState();
+  const [isFullScreen, setIsFullScreen] = useState(false);
+
+  const getAllEmployees = async (jsonResponse) => {
+    const allEmployees = [];
+
+    jsonResponse.forEach(vendor => {
+
+      const { employees } = vendor;
+      allEmployees.push(...employees);
+
+    });
+    return allEmployees;
+  }
+
+  const vendorToIconMap = {
+    'POK': pokIcon,
+    'EDR': cdrIcon,
+    'WDR-Butwal': wdrIcon,
+    'CDR': edrIcon,
+    'FWDR': fwdrIcon,
+    'MWDR': mwdrIcon,
+    'Bagmati': edrIcon,
+    'Bagmati Central': edrIcon
+  }
 
   const fetchData = async () => {
-    // props.setProgress(10);
+    props.setProgress(10);
     const response = await fetch(BASE_URL + "locations/live-location-traces", {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'
       }
     });
-    let json = await response.json();
+    let orgResponse = await response.json();
+    setOrgResponse(orgResponse);
+
+    let json = await getAllEmployees(orgResponse);
 
     const userData = json.map((item) => ({
       id: item.employeeId,
@@ -37,12 +72,12 @@ export const NewHome = (props) => {
       lat: item.location.latitude,
       lng: item.location.longitude,
       time: item.location.tracked_at,
-      icon: calculateTimeDifferenceInMinutes(item.location.tracked_at) > 10 ? userIcon : liveLocationIcon,
+      icon: vendorToIconMap[item.vendor_name],
       vendorName: item.vendor_name
     }));
 
     setUsers(userData);
-    // props.setProgress(100);
+    props.setProgress(100);
   }
 
 
@@ -60,61 +95,59 @@ export const NewHome = (props) => {
     };
   }, [users]);
 
+  // Function to toggle full-screen mode
+  const toggleFullScreen = () => {
+    var elem = document.documentElement;
+    if (!document.fullscreenElement && !document.mozFullScreenElement &&
+      !document.webkitFullscreenElement && !document.msFullscreenElement) {
+      if (elem.requestFullscreen) {
+        elem.requestFullscreen();
+      } else if (elem.msRequestFullscreen) {
+        elem.msRequestFullscreen();
+      } else if (elem.mozRequestFullScreen) {
+        elem.mozRequestFullScreen();
+      } else if (elem.webkitRequestFullscreen) {
+        elem.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+      }
+      setIsFullScreen(true); // Update state when entering full-screen mode
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      } else if (document.msExitFullscreen) {
+        document.msExitFullscreen();
+      } else if (document.mozCancelFullScreen) {
+        document.mozCancelFullScreen();
+      } else if (document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
+      }
+      setIsFullScreen(false); // Update state when exiting full-screen mode
+    }
+  };
+
+  const [receivedData, setReceivedData] = useState();
+
+  const logDataFromSidedetails = (data) => {
+    setReceivedData(data);
+  };
+
+  const bodyStyle = {
+    overflow: 'hidden'
+  };
+
+
   return (
     <div>
       <div className="wrapper">
         <nav id="sidebar">
           <div className="sidebar-header">
-            <h3>Bootstrap Sidebar</h3>
+          <Link className="navbar-brand" to="/">
+            <img src={logo} alt="Logo" width="40" height="40" style={{ marginRight: '10px' }} />
+            DH-RTLS
+          </Link>
           </div>
-          <ul className="list-unstyled components">
-            <p>Dummy Heading</p>
-            <li className="active">
-              <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" className="dropdown-toggle">Home</a>
-              <ul className="collapse list-unstyled" id="homeSubmenu">
-                <li>
-                  <a href="#">Home 1</a>
-                </li>
-                <li>
-                  <a href="#">Home 2</a>
-                </li>
-                <li>
-                  <a href="#">Home 3</a>
-                </li>
-              </ul>
-            </li>
-            <li>
-              <a href="#">About</a>
-            </li>
-            <li>
-              <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" className="dropdown-toggle">Pages</a>
-              <ul className="collapse list-unstyled" id="pageSubmenu">
-                <li>
-                  <a href="#">Page 1</a>
-                </li>
-                <li>
-                  <a href="#">Page 2</a>
-                </li>
-                <li>
-                  <a href="#">Page 3</a>
-                </li>
-              </ul>
-            </li>
-            <li>
-              <a href="#">Portfolio</a>
-            </li>
-            <li>
-              <a href="#">Contact</a>
-            </li>
-          </ul>
-          <ul className="list-unstyled CTAs">
-            <li>
-              <a href="https://bootstrapious.com/tutorial/files/sidebar.zip" className="download">Download source</a>
-            </li>
-            <li>
-              <a href="https://bootstrapious.com/p/bootstrap-sidebar" className="article">Back to article</a>
-            </li>
-          </ul>
+          <div className="p-2 bd-highlight ">
+            <Sidedetails orgResponse={orgResponse} users={users} logData={logDataFromSidedetails} />
+          </div>
         </nav>
 
         <div id="content">
@@ -122,26 +155,9 @@ export const NewHome = (props) => {
             <div className="container-fluid">
               <button type="button" id="sidebarCollapse" className="btn btn-info">
                 <i className="fas fa-align-left"></i>
-                <span>Toggle Sidebar</span>
-              </button>
-              <button className="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <i className="fas fa-align-justify"></i>
+                <span>Vendors</span>
               </button>
               <div className="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul className="nav navbar-nav ml-auto">
-                  <li className="nav-item active">
-                    <a className="nav-link" href="#">Page</a>
-                  </li>
-                  <li className="nav-item">
-                    <a className="nav-link" href="#">Page</a>
-                  </li>
-                  <li className="nav-item">
-                    <a className="nav-link" href="#">Page</a>
-                  </li>
-                  <li className="nav-item">
-                    <a className="nav-link" href="#">Page</a>
-                  </li>
-                </ul>
               </div>
             </div>
           </nav>

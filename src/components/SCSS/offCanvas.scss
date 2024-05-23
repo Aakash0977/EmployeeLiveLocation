@@ -1,0 +1,73 @@
+$offcanvas-horizontal-width:        400px;
+$offcanvas-vertical-height:         30vh;
+$offcanvas-transition-duration:     .3s;
+
+.offcanvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 100%;
+  overflow-x: hidden;
+  transition: width $offcanvas-transition-duration ease;
+
+  &.horizontal {
+    width: $offcanvas-horizontal-width;
+    transition: width $offcanvas-transition-duration ease;
+  }
+
+  &.vertical {
+    top: 0;
+    left: auto;
+    right: 0;
+    width: 100%;
+    height: 0;
+    transition: height $offcanvas-transition-duration ease;
+  }
+
+  &.open {
+    &.horizontal {
+      width: $offcanvas-horizontal-width;
+    }
+
+    &.vertical {
+      height: $offcanvas-vertical-height;
+    }
+  }
+
+  .offcanvas-content {
+    padding: 16px;
+  }
+
+  .offcanvas-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    font-size: 24px;
+    cursor: pointer;
+  }
+}
+
+// Example usage in HTML
+// <div class="offcanvas horizontal">
+//   <div class="offcanvas-content">
+//     <!-- content here -->
+//     <span class="offcanvas-close">&times;</span>
+//   </div>
+// </div>
+
+// <div class="offcanvas vertical">
+//   <div class="offcanvas-content">
+//     <!-- content here -->
+//     <span class="offcanvas-close">&times;</span>
+//   </div>
+// </div>
+
+// JavaScript to toggle open/close
+// document.querySelector('.offcanvas-close').addEventListener('click', function() {
+//   this.closest('.offcanvas').classList.remove('open');
+// });
+
+// document.querySelector('.open-offcanvas').addEventListener('click', function() {
+//   document.querySelector('.offcanvas').classList.add('open');
+// });
