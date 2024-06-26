@@ -28,6 +28,7 @@ const UserHistory = () => {
                       <th scope="col">Username</th>
                       <th scope="col">Tracked Date</th>
                       <th scope="col">Tracked Location</th>
+                      <th scope="col">Actions</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -37,6 +38,10 @@ const UserHistory = () => {
                         <td>{user.firstName}</td>
                         <td>{user.lastName}</td>
                         <td>{user.handle}</td>
+                        <td>
+                          <button className="btn btn-primary btn-sm mr-2">View</button>
+                          {/* <button className="btn btn-danger btn-sm">Delete</button> */}
+                        </td>
                       </tr>
                     ))}
                   </tbody>
